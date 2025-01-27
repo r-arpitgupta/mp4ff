@@ -24,3 +24,15 @@ func GetNalusFromSample(sample []byte) ([][]byte, error) {
 	}
 	return naluList, nil
 }
+
+// GetSampleFromNalus - get sample from nal units
+func GetSampleFromNalus(nalus [][]byte) ([]byte, error) {
+	var sample []byte
+	for _, nalu := range nalus {
+		size := make([]byte, 4, 4)
+		binary.BigEndian.PutUint32(size, uint32(len(nalu)))
+		sample = append(sample, size...)
+		sample = append(sample, nalu...)
+	}
+	return sample, nil
+}
